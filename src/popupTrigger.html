@@ -1,7 +1,8 @@
 <script>
     var TIME_ON_PAGE_BEFORE_SHOWING_POPUP_MILLI = 30 * 1000; // 30 seconds
-    // returns a boolean of whether or not to show the signup popup
     var TIME_BEFORE_SHOWING_POPUP_AGAIN_MILLI = 60 * 1000 * 60 * 24 * 14; // 14 days
+
+    // returns a boolean of whether or not the user has already signed up
     var hasSubscribed = function () {
         var hasSubscribed = false;
         try {
@@ -12,6 +13,7 @@
         return hasSubscribed;
     };
 
+    // get the last epoch time of when the user saw the pop up last
     var getLastPopupSeenEpochMilli = function () {
         var lastPopupSeenEpochMilli = 0;
         try {
@@ -25,6 +27,7 @@
         return lastPopupSeenEpochMilli;
     };
 
+    // trigger the DOM to show the pop up element depending on certain conditions
     var showPopupIfNotSubscribedToNewsletter = function() {
         if (!hasSubscribed() && Date.now() - getLastPopupSeenEpochMilli() > TIME_BEFORE_SHOWING_POPUP_AGAIN_MILLI) {
             var popup = document.getElementById('popup-overlay');
@@ -38,6 +41,7 @@
         }
     };
 
+    // trigger the custom javascript after a certain amount of time on the page
     window.addEventListener('load', function () {
         setTimeout(showPopupIfNotSubscribedToNewsletter, TIME_ON_PAGE_BEFORE_SHOWING_POPUP_MILLI);
     }, false);
