@@ -1,0 +1,44 @@
+<script>
+    var TIME_ON_PAGE_BEFORE_SHOWING_POPUP_MILLI = 30 * 1000; // 30 seconds
+    // returns a boolean of whether or not to show the signup popup
+    var TIME_BEFORE_SHOWING_POPUP_AGAIN_MILLI = 60 * 1000 * 60 * 24 * 14; // 14 days
+    var hasSubscribed = function () {
+        var hasSubscribed = false;
+        try {
+            hasSubscribed = localStorage.getItem('hasSignedUpToNewsletter') === "true";
+        } catch (error) {
+            console.error(error);
+        }
+        return hasSubscribed;
+    };
+
+    var getLastPopupSeenEpochMilli = function () {
+        var lastPopupSeenEpochMilli = 0;
+        try {
+            lastPopupSeenEpochMilli = localStorage.getItem('lastPopupSeenEpochMilli');
+            if (lastPopupSeenEpochMilli) {
+                lastPopupSeenEpochMilli = parseInt(lastPopupSeenEpochMilli);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+        return lastPopupSeenEpochMilli;
+    };
+
+    var showPopupIfNotSubscribedToNewsletter = function() {
+        if (!hasSubscribed() && Date.now() - getLastPopupSeenEpochMilli() > TIME_BEFORE_SHOWING_POPUP_AGAIN_MILLI) {
+            var popup = document.getElementById('popup-overlay');
+            popup.style.display = 'block';
+
+            try {
+                localStorage.setItem('lastPopupSeenEpochMilli', Date.now().toString());
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    };
+
+    window.addEventListener('load', function () {
+        setTimeout(showPopupIfNotSubscribedToNewsletter, TIME_ON_PAGE_BEFORE_SHOWING_POPUP_MILLI);
+    }, false);
+</script>
