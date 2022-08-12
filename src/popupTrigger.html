@@ -1,15 +1,16 @@
 <script>
+
     var TIME_ON_PAGE_BEFORE_SHOWING_POPUP_MILLI = 30 * 1000; // 30 seconds
     var TIME_BEFORE_SHOWING_POPUP_AGAIN_MILLI = 60 * 1000 * 60 * 24 * 14; // 14 days
 
-    var setHasSubscribed = function () {
+
+    var setHasSubscribed = function (event) {
         try {
             localStorage.setItem('hasSignedUpToNewsletter', "true");
         } catch (error) {
             console.error(error);
         }
     };
-
     // returns a boolean of whether or not the user has already signed up
     var hasSubscribed = function () {
         var hasSubscribed = false;
@@ -51,9 +52,10 @@
 
     // trigger the custom javascript after a certain amount of time on the page
     window.addEventListener('load', function () {
-        var btn = document.getElementById("subscribe-button");
-        btn.addEventListener('click', setHasSubscribed);
-
+        var btns = document.getElementsByClassName("subscribe-button");
+        for (var btn of btns) {
+            btn.addEventListener('click', setHasSubscribed);
+        }
         setTimeout(showPopupIfNotSubscribedToNewsletter, TIME_ON_PAGE_BEFORE_SHOWING_POPUP_MILLI);
     }, false);
 </script>
