@@ -8,7 +8,7 @@
         try {
             localStorage.setItem('hasSignedUpToNewsletter', "true");
         } catch (error) {
-            console.error(error);
+            console.warn(error);
         }
     };
     // returns a boolean of whether or not the user has already signed up
@@ -17,7 +17,7 @@
         try {
             hasSubscribed = localStorage.getItem('hasSignedUpToNewsletter') === "true";
         } catch (error) {
-            console.error(error);
+            console.warn(error);
         }
         return hasSubscribed;
     };
@@ -45,7 +45,23 @@
             try {
                 localStorage.setItem('lastPopupSeenEpochMilli', Date.now().toString());
             } catch (error) {
-                console.error(error);
+                console.warn(error);
+            }
+        }
+    };
+
+    var trackReferrerIfAvailable = function () {
+        var campaign = window.campaign;
+        if (campaign) {
+            var emailAddress = document.getElementById('email');
+            if (emailAddress.validity.valid) {
+                campaign.identify({
+                    email: emailAddress.value,
+                }, console.log.bind(null, "Referral successful!"));
+
+                //campaign.track("conversion", function(err, data) {
+                //    console.log(err, data);
+                //});
             }
         }
     };
@@ -59,3 +75,5 @@
         setTimeout(showPopupIfNotSubscribedToNewsletter, TIME_ON_PAGE_BEFORE_SHOWING_POPUP_MILLI);
     }, false);
 </script>
+
+
